@@ -9,12 +9,12 @@ router = APIRouter(
 )
 
 
-@router.get("")
-def get_questions():
-    return {
-        "message": "Questions",
-        "data": questions
-    }
+# @router.get("")
+# def get_questions():
+#     return {
+#         "message": "Questions",
+#         "data": questions
+#     }
 
 
 @router.post("", status_code=201)
@@ -55,4 +55,24 @@ def get_byId(ques_id: int):
     raise HTTPException(
         status_code=404,
         detail="Question doesn't exist"
+    )
+
+
+
+@router.get("")
+def get_category_questions(category: str | None = None):
+    cat_ques=[]
+    if category in categories:
+        if not questions:
+            return "No questins exist"
+        for q in questions:
+            if q["category"] == category:
+                cat_ques.append(q["question"])
+        return {
+            "message": category,
+            "data": cat_ques
+        }
+    raise HTTPException(
+        status_code= 404,
+        detail= "Category not found"
     )
